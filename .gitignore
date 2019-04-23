@@ -20,3 +20,4 @@ application/config/config.php
 application/config/database.php
 store/application/config/config.php
 store/application/config/database.php
+.idea/workspace.xml

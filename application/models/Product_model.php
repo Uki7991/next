@@ -305,21 +305,12 @@ LEFT JOIN store_login ON purchase.store_id_login = store_login.user_id");
             where sale_id = ".$order_id." limit 1");
             return $q->row();
       }
-      function get_sale_order_items($sale_id){
+      function get_sale_order_items($sale_id, $user_id){
         $q = $this->db->query("Select si.*,p.* from sale_items si
-        inner join products p on p.product_id = si.product_id where sale_id = '".$sale_id."'");
-       /* $data['data'][]= $q->result();
-        $q = $this->db->query("Select si.*,hp.* from sale_items si
-        inner join header_products hp on hp.product_id = si.product_id
-        where sale_id = '".$sale_id."'");
-        $data['data'][] = $q->result();
-        /*if(empty($data)){
-         $q = $this->db->query("Select si.*,hp.* from sale_items si
-        inner join header_products hp on hp.product_id = si.product_id
-        where sale_id = '".$sale_id."'");
-        }*/
+        inner join products p on p.product_id = si.product_id
+        left join store_login on store_login.user_id = p.store_id
+        where sale_id = '".$sale_id."' and store_login.user_id = '".$user_id."'");
 
-    //int_r($data);exit();*/
             return $q->result();
       }
 

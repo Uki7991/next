@@ -566,13 +566,14 @@ class Api extends CI_Controller
     {
         $this->load->library('form_validation');
         $this->form_validation->set_rules('sale_id', 'Sale ID', 'trim|required');
+        $this->form_validation->set_rules('user_id', 'User ID', 'trim|required');
         if ($this->form_validation->run() == FALSE) {
             $data["responce"] = false;
             $data["error"] = 'Warning! : ' . strip_tags($this->form_validation->error_string());
 
         } else {
             $this->load->model("product_model");
-            $data = $this->product_model->get_sale_order_items($this->input->post("sale_id"));
+            $data = $this->product_model->get_sale_order_items($this->input->post("sale_id"), $this->input->post("user_id"));
         }
         echo json_encode($data);
     }

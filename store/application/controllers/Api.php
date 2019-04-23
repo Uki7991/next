@@ -265,7 +265,7 @@ class Api extends CI_Controller
                 } else {
                     $data["responce"] = true;
                     $data["data"] = array("user_id" => $row->user_id, "user_fullname" => $row->user_fullname, "user_email" => $row->user_email, "user_phone" => $row->user_phone, "user_image" => $row->user_image);
-
+                    $data['user_id'] = _is_user_login($this);
                 }
             } else {
                 $data["responce"] = false;
@@ -502,6 +502,7 @@ class Api extends CI_Controller
     {
         $this->load->library('form_validation');
         $this->form_validation->set_rules('sale_id', 'Sale ID', 'trim|required');
+//        $this->form_validation->set_rules('user_id', 'User ID', 'trim|required');
         if ($this->form_validation->run() == FALSE) {
             $data["responce"] = false;
             $data["error"] = 'Warning! : ' . strip_tags($this->form_validation->error_string());
@@ -560,16 +561,13 @@ class Api extends CI_Controller
 
     function dashboard()
     {
-        if (_is_user_login($this)) {
-            $user_id = _get_current_user_id($this);
-            $this->load->model("product_model");
-            $date = date("Y-m-d");
-            $data["today_orders"] = $this->product_model->get_sale_orders(" and sale.on_date = '" . $date . "' and store_login.user_id = '" . $user_id . "'");
-            $nexday = date('Y-m-d', strtotime(' +1 day'));
-            $data["nextday_orders"] = $this->product_model->get_sale_orders(" and sale.on_date = '" . $nexday . "' and store_login.user_id = '" . $user_id . "'");
-            echo json_encode($data);
-        }
-        echo json_encode(['responce' => false, 'error' => 'You are not authorized!']);
+        $user_id = $this->input->get('user_id');
+        $this->load->model("product_model");
+        $date = date("Y-m-d");
+        $data["today_orders"] = $this->product_model->get_sale_orders(" and sale.on_date = '" . $date . "' and store_login.user_id = '" . $user_id . "'");
+        $nexday = date('Y-m-d', strtotime(' +1 day'));
+        $data["nextday_orders"] = $this->product_model->get_sale_orders(" and sale.on_date = '" . $nexday . "' and store_login.user_id = '" . $user_id . "'");
+        echo json_encode($data);
     }
 
 
