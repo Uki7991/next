@@ -170,11 +170,13 @@ class Product_model extends CI_Model
         return $q->row();
     }
 
-    function get_sale_order_items($sale_id)
+    function get_sale_order_items($sale_id, $user_id)
     {
-        $q = $this->db->query("Select sale_items.*,products.product_image, products.product_name from sale_items
-        inner join products on products.product_id = sale_items.product_id
-        where sale_id = '" . $sale_id . "'");
+        $q = $this->db->query("Select si.*,p.* from sale_items si
+        inner join products p on p.product_id = si.product_id
+        left join store_login on store_login.user_id = p.store_id
+        where sale_id = '".$sale_id."' and store_login.user_id = '".$user_id."'");
+
         return $q->result();
     }
 

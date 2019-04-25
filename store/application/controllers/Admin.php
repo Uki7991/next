@@ -86,12 +86,14 @@ class Admin extends MY_Controller {
 	}
     public function dashboard(){
         if(_is_user_login($this)){
+            $user_id = _get_current_user_id($this);
+
             $data = array();
             $this->load->model("product_model");
             $date = date("Y-m-d");
-            $data["today_orders"] = $this->product_model->get_sale_orders(" and sale.on_date = '".$date."' ");
+            $data["today_orders"] = $this->product_model->get_sale_orders(" and sale.on_date = '" . $date . "' and store_login.user_id = '" . $user_id . "'");
              $nexday = date('Y-m-d', strtotime(' +1 day'));
-            $data["nextday_orders"] = $this->product_model->get_sale_orders(" and sale.on_date = '".$nexday."' ");
+            $data["nextday_orders"] = $this->product_model->get_sale_orders(" and sale.on_date = '" . $nexday . "' and store_login.user_id = '" . $user_id . "'");
             $this->load->view("admin/dashboard",$data);
         }
         else
@@ -257,9 +259,10 @@ class Admin extends MY_Controller {
     public function orderdetails($order_id){
         if(_is_user_login($this)){
             $data = array();
+            $user_id = _get_current_user_id($this);
             $this->load->model("product_model");
             $data["order"] = $this->product_model->get_sale_order_by_id($order_id);
-            $data["order_items"] = $this->product_model->get_sale_order_items($order_id);
+            $data["order_items"] = $this->product_model->get_sale_order_items($order_id, $user_id);
             $this->load->view("admin/orders/orderdetails",$data);
         }
         else
