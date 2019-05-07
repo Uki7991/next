@@ -307,7 +307,7 @@ class Admin extends MY_Controller
             $data = array();
             $this->load->model("product_model");
             $data["order"] = $this->product_model->get_sale_order_by_id($order_id);
-            $data["order_items"] = $this->product_model->get_sale_order_items($order_id);
+            $data["order_items"] = $this->product_model->get_sale_order_items($order_id, _get_current_user_id($this));
             //print_r( $data);exit();
             $this->load->view("admin/orders/orderdetails2", $data);
         } else {

@@ -175,7 +175,7 @@ class Product_model extends CI_Model
         $q = $this->db->query("Select si.*,p.* from sale_items si
         inner join products p on p.product_id = si.product_id
         left join store_login on store_login.user_id = p.store_id
-        where sale_id = '".$sale_id."' and store_login.user_id = '".$user_id."'");
+        where sale_id = '" . $sale_id . "' and store_login.user_id = '" . $user_id . "'");
 
         return $q->result();
     }

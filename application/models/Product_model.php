@@ -17,7 +17,7 @@ class Product_model extends CI_Model{
              if($search!=""){
                 $filter .=" and products.product_name like '".$search."' ";
             }
-            $q = $this->db->query("Select dp.*,products.*, ( ifnull (producation.p_qty,0) - ifnull(consuption.c_qty,0)) as stock ,categories.title, store_login.user_name as store from products
+            $q = $this->db->query("Select dp.*,products.*, ( ifnull (producation.p_qty,0) - ifnull(consuption.c_qty,0)) as stock ,categories.title, store_login.user_name from products
             inner join categories on categories.id = products.category_id
             left outer join(select SUM(qty) as c_qty,product_id from sale_items group by product_id) as consuption on consuption.product_id = products.product_id
             left outer join(select SUM(qty) as p_qty,product_id from purchase group by product_id) as producation on producation.product_id = products.product_id

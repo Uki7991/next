@@ -347,7 +347,8 @@ class Api extends CI_Controller
                 'increament' => $product->increament,
                 'rewards' => $product->rewards,
                 'stock' => $product->stock,
-                'title' => $product->title
+                'title' => $product->title,
+                'store_name' => $product->user_name,
             );
         }
 
@@ -589,7 +590,7 @@ class Api extends CI_Controller
 
         } else {
             $this->db->query("Update sale set status = 3 where user_id = '" . $this->input->post("user_id") . "' and  sale_id = '" . $this->input->post("sale_id") . "' ");
-            $this->db->delete('sale_items', array('sale_id' => $this->input->post("sale_id")));
+//            $this->db->delete('sale_items', array('sale_id' => $this->input->post("sale_id")));
             $data["responce"] = true;
             $data["message"] = "Your order cancel successfully";
         }
@@ -1148,8 +1149,9 @@ class Api extends CI_Controller
             //$q = $this->db->query("select p.*,dp.start_date,dp.start_time,dp.end_time,dp.deal_price,c.title,count(si.product_id) as top,si.product_id from products p INNER join //sale_items si on p.product_id=si.product_id INNER join categories c ON c.id=p.category_id left join deal_product dp on dp.product_id=si.product_id GROUP BY si.product_id //order by top DESC LIMIT 8");
 
 
-            $q = $this->db->query("Select dp.*,products.*, ( ifnull (producation.p_qty,0) - ifnull(consuption.c_qty,0)) as stock ,categories.title from products 
+            $q = $this->db->query("Select store_login.user_name, dp.*,products.*, ( ifnull (producation.p_qty,0) - ifnull(consuption.c_qty,0)) as stock ,categories.title from products 
             inner join categories on categories.id = products.category_id
+            left join store_login on store_login.user_id = products.store_id
             left outer join(select SUM(qty) as c_qty,product_id from sale_items group by product_id) as consuption on consuption.product_id = products.product_id 
             left outer join(select SUM(qty) as p_qty,product_id from purchase group by product_id) as producation on producation.product_id = products.product_id
            left join deal_product dp on dp.product_id=products.product_id where 1 " . $filter . " " . $limit);
@@ -1196,8 +1198,8 @@ class Api extends CI_Controller
                     'increament' => $product->increament,
                     'rewards' => $product->rewards,
                     'stock' => $product->stock,
-                    'title' => $product->title
-
+                    'title' => $product->title,
+                    'store_name' => $product->user_name,
                 );
             }
         }
@@ -1278,9 +1280,10 @@ INNER JOIN categories on categories.id=products.category_id limit 4");
         error_reporting(0);
 
         if ($this->input->post('dealproduct')) {
-            $q = $this->db->query("Select dp.*,products.*, ( ifnull (producation.p_qty,0) - ifnull(consuption.c_qty,0)) as stock ,categories.title from deal_product dp
+            $q = $this->db->query("Select store_login.user_name, dp.*,products.*, ( ifnull (producation.p_qty,0) - ifnull(consuption.c_qty,0)) as stock ,categories.title from deal_product dp
 			left join  products on products.product_name=dp.product_name
             inner join categories on categories.id = products.category_id
+            left outer join store_login on store_login.user_id = products.store_id
             left outer join (select SUM(qty) as c_qty,product_id from sale_items group by product_id) as consuption on consuption.product_id = products.product_id 
             left outer join(select SUM(qty) as p_qty,product_id from purchase group by product_id) as producation on producation.product_id = products.product_id
             where 1 " . $filter . " " . $limit);
@@ -1333,8 +1336,8 @@ INNER JOIN categories on categories.id=products.category_id limit 4");
                 'increament' => $product->increament,
                 'rewards' => $product->rewards,
                 'stock' => $product->stock,
-                'title' => $product->title
-
+                'title' => $product->title,
+                'store_name' => $product->user_name,
             );
         }
         echo json_encode($data);
