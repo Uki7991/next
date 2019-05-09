@@ -83,7 +83,7 @@
                                                 <tr>
                                                     <td class="text-center"><?php echo $product->product_id; ?></td>
                                                     <td class="text-center"><?php echo $product->product_name; ?></td>
-                                                    <td class="text-center"><?php echo $product->store; ?></td>
+                                                    <td class="text-center"><?php echo $product->user_name; ?></td>
                                                     <td class="text-center"><?php echo $product->title; ?></td>
                                                     <td class="text-center"><?php echo $product->product_description; ?></td>
                                                     <td class="text-center"><?php if($product->product_image!=""){ ?><div class="cat-img" style="width: 50px;"><img width="100%" height="100%" src="<?php echo $this->config->item('base_url').'uploads/products/'.$product->product_image; ?>" /></div> <?php } ?></td>
