@@ -108,7 +108,7 @@ class Product_model extends CI_Model{
              if($search!=""){
                 $filter .=" and products.product_name like '.$search%%.'";
             }
-            $q = $this->db->query("Select products.product_name, products.price, products.product_id from products where products.product_name like '$name%%'".$limit );
+            $q = $this->db->query("Select store_login.id, store_login.user_name, products.product_name, products.price, products.product_id from products left join store_login on store_login.id = products.store_id where products.product_name like '$name%%'".$limit );
             $products = $q->result();
             //inner join product_price on product_price.product_id = products.product_id
 
