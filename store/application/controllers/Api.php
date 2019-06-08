@@ -612,11 +612,23 @@ class Api extends CI_Controller
 
     function get_leftstock()
     {
-        $q = $this->db->query("Select products.*,( ifnull (producation.p_qty,0) - ifnull(consuption.c_qty,0)) as stock from products 
-        left outer join(select SUM(qty) as c_qty,product_id from sale_items group by product_id) as consuption on consuption.product_id = products.product_id 
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('user_id', 'User id', 'trim|required');
+
+        if ($this->form_validation->run() == FALSE) {
+            $data["responce"] = false;
+            $data["error"] = 'Warning! : ' . strip_tags($this->form_validation->error_string());
+
+        } else {
+            $q = $this->db->query("Select store_login.user_name, products.*,( ifnull (producation.p_qty,0) - ifnull(consuption.c_qty,0)) as stock from products 
+        left outer join(select SUM(qty) as c_qty,product_id from sale_items group by product_id) as consuption on consuption.product_id = products.product_id
+        left join store_login on store_login.user_id = products.store_id
             left outer join(select SUM(qty) as p_qty,product_id from purchase group by product_id) as producation on producation.product_id = products.product_id
-            ");
-        $data = $q->result();
+            where products.store_id ='" . $this->input->post("user_id") . "'");
+            $data = $q->result();
+        }
+
+
         echo json_encode($data);
     }
 
