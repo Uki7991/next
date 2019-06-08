@@ -180,6 +180,15 @@ class Product_model extends CI_Model
         return $q->result();
     }
 
+    function get_sale_order_items_by_order_id_with_status($sale_id, $status)
+    {
+        $q = $this->db->query("Select si.* from sale_items si
+        inner join products p on p.product_id = si.product_id
+        where sale_id = '".$sale_id."' and item_status = '". $status ."'");
+
+        return $q->result();
+    }
+
     function get_leftstock()
     {
         $q = $this->db->query("Select products.*,( ifnull (producation.p_qty,0) - ifnull(consuption.c_qty,0)) as stock from products

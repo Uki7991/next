@@ -124,9 +124,15 @@ class Admin extends MY_Controller
     {
         if (_is_user_login($this)) {
             $this->load->model("product_model");
+            $user = _get_current_user_id($this);
             $order = $this->product_model->get_sale_order_by_id($order_id);
-            if (!empty($order)) {
-                $this->db->query("update sale set status = 1 where sale_id = '" . $order_id . "'");
+            $orderItems = $this->product_model->get_sale_order_items($order_id, $user);
+            if (!empty($order) && !empty($orderItems)) {
+                $this->db->query("update sale_items set item_status = 1 where sale_id = '" . $order_id . "'");
+                $orderItems = $this->product_model->get_sale_order_items_by_order_id_with_status($order_id, 0);
+                if (empty($orderItems)) {
+                    $this->db->query("update sale set status = 1 where sale_id = '" . $order_id . "'");
+                }
                 $q = $this->db->query("Select * from registers where user_id = '" . $order->user_id . "'");
                 $user = $q->row();
 
@@ -157,9 +163,12 @@ class Admin extends MY_Controller
     public function delivered_order($order_id)
     {
         if (_is_user_login($this)) {
+            $user = _get_current_user_id($this);
             $this->load->model("product_model");
             $order = $this->product_model->get_sale_order_by_id($order_id);
-            if (!empty($order)) {
+            $orderItems = $this->product_model->get_sale_order_items($order_id, $user);
+            if (!empty($order) && !empty($orderItems)) {
+                $this->db->query("update sale_items set item_status = 2 where sale_id = '" . $order_id . "'");
                 $this->db->query("update sale set status = 2 where sale_id = '" . $order_id . "'");
 
                 $q = $this->db->query("Select * from registers where user_id = '" . $order->user_id . "'");
@@ -194,8 +203,12 @@ class Admin extends MY_Controller
     {
         if (_is_user_login($this)) {
             $this->load->model("product_model");
+            $user = _get_current_user_id($this);
             $order = $this->product_model->get_sale_order_by_id($order_id);
-            if (!empty($order)) {
+            $orderItems = $this->product_model->get_sale_order_items($order_id, $user);
+
+            if (!empty($order) && !empty($orderItems)) {
+                $this->db->query("update sale_items set item_status = 3 where sale_id = '" . $order_id . "'");
                 $this->db->query("update sale set status = 3 where sale_id = '" . $order_id . "'");
 
                 $q = $this->db->query("Select * from users where user_id = '" . $order->user_id . "'");

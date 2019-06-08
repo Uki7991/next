@@ -511,7 +511,8 @@ class Api extends CI_Controller
                     "sale_id" => $id,
                     "price" => $dt->price,
                     "qty_in_kg" => $qty_in_kg,
-                    "rewards" => $dt->rewards
+                    "rewards" => $dt->rewards,
+                    "status" => 0,
                 );
                 $this->common_model->data_insert("sale_items", $array);
 
