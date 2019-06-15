@@ -277,9 +277,14 @@ LEFT JOIN store_login ON purchase.store_id_login = store_login.user_id");
       }
 
       function get_sale_by_user($user_id){
-            $q = $this->db->query("Select sale_items.sale_item_id, sale_items.item_status, sale_items.sale_id, sale.* from sale
-                left join sale_items on sale_items.sale_id = sale.sale_id
-                where user_id = '".$user_id."' and status != 3 ORDER BY sale.sale_id DESC");
+            $q = $this->db->query("Select sale.* from sale
+                where sale.user_id = '".$user_id."' and sale.status != 3  ORDER BY sale.sale_id DESC");
+            return $q->result();
+      }
+
+      function get_sale_items_by_sale($sale_id){
+            $q = $this->db->query("Select sale_items.* from sale_items
+                where sale_items.sale_id = '".$sale_id."' and sale_items.item_status != 3  ORDER BY sale_items.sale_item_id DESC");
             return $q->result();
       }
       function get_sale_by_user2($user_id){

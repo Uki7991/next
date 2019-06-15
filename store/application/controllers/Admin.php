@@ -128,7 +128,7 @@ class Admin extends MY_Controller
             $order = $this->product_model->get_sale_order_by_id($order_id);
             $orderItems = $this->product_model->get_sale_order_items($order_id, $user);
             if (!empty($order) && !empty($orderItems)) {
-                $this->db->query("update sale_items set item_status = 1 where sale_id = '" . $order_id . "'");
+                $this->db->query("update sale_items inner join products on products.product_id = sale_items.product_id left join store_login on store_login.user_id = products.store_id set sale_items.item_status = 1 where sale_items.sale_id = '" . $order_id . "' and store_login.user_id = '" . $user . "'");
                 $orderItems = $this->product_model->get_sale_order_items_by_order_id_with_status($order_id, 0);
                 if (empty($orderItems)) {
                     $this->db->query("update sale set status = 1 where sale_id = '" . $order_id . "'");
@@ -168,7 +168,7 @@ class Admin extends MY_Controller
             $order = $this->product_model->get_sale_order_by_id($order_id);
             $orderItems = $this->product_model->get_sale_order_items($order_id, $user);
             if (!empty($order) && !empty($orderItems)) {
-                $this->db->query("update sale_items set item_status = 2 where sale_id = '" . $order_id . "'");
+                $this->db->query("update sale_items inner join products on products.product_id = sale_items.product_id left join store_login on store_login.user_id = products.store_id set sale_items.item_status = 2 where sale_items.sale_id = '" . $order_id . "' and store_login.user_id = '" . $user . "'");
                 $this->db->query("update sale set status = 2 where sale_id = '" . $order_id . "'");
 
                 $q = $this->db->query("Select * from registers where user_id = '" . $order->user_id . "'");
@@ -208,7 +208,7 @@ class Admin extends MY_Controller
             $orderItems = $this->product_model->get_sale_order_items($order_id, $user);
 
             if (!empty($order) && !empty($orderItems)) {
-                $this->db->query("update sale_items set item_status = 3 where sale_id = '" . $order_id . "'");
+                $this->db->query("update sale_items inner join products on products.product_id = sale_items.product_id left join store_login on store_login.user_id = products.store_id set sale_items.item_status = 3 where sale_items.sale_id = '" . $order_id . "' and store_login.user_id = '" . $user . "'");
                 $this->db->query("update sale set status = 3 where sale_id = '" . $order_id . "'");
 
                 $q = $this->db->query("Select * from users where user_id = '" . $order->user_id . "'");
