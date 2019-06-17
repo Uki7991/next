@@ -546,7 +546,7 @@ class Api extends CI_Controller
             $this->load->model("product_model");
             $data = $this->product_model->get_sale_by_user($this->input->post("user_id"));
             foreach ($data as $item) {
-                $item->products[] = $this->product_model->get_sale_items_by_sale($item->sale_id);
+                $item->products = $this->product_model->get_sale_items_by_sale($item->sale_id);
             }
         }
         echo json_encode($data);
